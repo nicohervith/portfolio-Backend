@@ -1,6 +1,5 @@
 package com.portfolio.back.Security.Dto;
 
-
 import javax.validation.constraints.NotBlank;
 
 public class LoginUsuario {

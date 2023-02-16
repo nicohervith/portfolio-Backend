@@ -11,9 +11,8 @@
     <groupId>com.portfolio</groupId>
     <artifactId>gregorioalasino</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
-    <name>gregorioalasino</name>
-    <description>my portfolio</description>
+    <name>back</name>
+    <description>Backend portfolio</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>

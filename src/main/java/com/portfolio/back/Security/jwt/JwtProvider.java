@@ -2,7 +2,7 @@ package com.portfolio.back.Security.jwt;
 
 //Esta clase es la que genera el token
 
-import com.portfolio.back.Security.Entity.UsuarioPpal;
+import com.portfolio.back.Security.Entity.UsuarioPrincipal;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -18,40 +18,42 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtProvider {
-        private final static Logger logger = LoggerFactory.getLogger(JwtProvider.class);
-       
-        @Value("${jwt.secret}")
-        private String secret;
-        @Value("${jwt.expiration}")
-        private int expiration;
-        
-        public String generateToken(Authentication authentication){
-            UsuarioPpal usuarioPpal = (UsuarioPpal) authentication.getPrincipal();
-            return Jwts.builder().setSubject(usuarioPpal.getUsername())
-                    .setIssuedAt(new Date())
-                    .setExpiration(new Date(new Date().getTime()+expiration*1000))
-                    .signWith(SignatureAlgorithm.HS512, secret)
-                    .compact();
+
+    private final static Logger logger = LoggerFactory.getLogger(JwtProvider.class);
+
+    @Value("${jwt.secret}")
+    private String secret;
+    @Value("${jwt.expiration}")
+    private int expiration;
+
+    public String generateToken(Authentication authentication) {
+        UsuarioPrincipal usuarioPrincipal = (UsuarioPrincipal) authentication.getPrincipal();
+        return Jwts.builder().setSubject(usuarioPrincipal.getUsername())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + expiration * 1000))
+                .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
+    }
+
+    public String getNombreUSuarioFromToken(String token) {
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+            return true;
+        } catch (MalformedJwtException e) {
+            logger.error("Token mal formado");
+        } catch (UnsupportedJwtException e) {
+            logger.error("Token no soportado");
+        } catch (ExpiredJwtException e) {
+            logger.error("Token expirado");
+        } catch (IllegalArgumentException e) {
+            logger.error("Token vacio");
+        } catch (SignatureException e) {
+            logger.error("Firma no válida");
         }
-        public String getNombreUsuarioFromToken(String token){
-            return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
-          
-        }
-        public boolean validateToken(String token){
-            try{
-                Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-                return true;
-            } catch (MalformedJwtException e){
-                logger.error("El token está mal formado");
-            }catch (UnsupportedJwtException e){
-                logger.error("El token no es soportado");
-            }catch (ExpiredJwtException e){
-                logger.error("Token expirado");
-            }catch (IllegalArgumentException e){
-                logger.error("El token está vacío");
-            }catch (SignatureException e){
-                logger.error("Firma no válida");
-            }
-            return false;
-        }
+        return false;
+    }
 }

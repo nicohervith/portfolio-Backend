@@ -4,6 +4,7 @@ import com.portfolio.back.Interface.IPersonaService;
 import com.portfolio.back.entity.Persona;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,8 @@ public class PersonaController {
         return ipersonaService.getPersona();
     }
     
+    //Le indico que solo los autorizados con el rol admin pueden crear
+    @PreAuthorize("hasRole('ADMIN')")
     //Desde el front le indicamos que guarde esto en la db
     @PostMapping("/personas/crear")
     public String createPersona(@RequestBody Persona persona){
@@ -39,6 +42,7 @@ public class PersonaController {
         return "Persona eliminada correctamente";
     }
     
+    @PreAuthorize("hasRole('ADMIN')")
     //Actualizar persona
     @PutMapping("/personas/editar/{id}")
     public Persona editPersona(@PathVariable Long id, 
