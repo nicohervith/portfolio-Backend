@@ -1,7 +1,7 @@
 
 package com.portfolio.back.Service;
 
-import com.portfolio.back.Security.Repository.REducacion;
+import com.portfolio.back.repository.REducacion;
 import com.portfolio.back.entity.Educacion;
 import java.util.List;
 import java.util.Optional;

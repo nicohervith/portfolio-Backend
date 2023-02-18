@@ -1,43 +1,47 @@
 package com.portfolio.back.Service;
 
-import com.portfolio.back.Interface.IPersonaService;
 import com.portfolio.back.entity.Persona;
 import com.portfolio.back.repository.IPersonaRep;
 import java.util.List;
+import java.util.Optional;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 @Service
-public class ImpPersonaService implements IPersonaService{
+@Transactional
+public class ImpPersonaService  {
+    @Autowired
+    IPersonaRep ipersonaRepository;
     
-    //Traigo el repositorio para que lea los campos
-    //Autowired permite inyectar dependencias dentro de otras
-    @Autowired IPersonaRep ipersonaRepository;
+    public List<Persona> list(){
+         return ipersonaRepository.findAll();
+     }
+     
+     public Optional<Persona> getOne(int id){
+         return ipersonaRepository.findById(id);
+     }
+     
+     public Optional<Persona> getByNombre(String nombre){
+         return ipersonaRepository.findByNombre(nombre);
+     }
+     
+     public void save(Persona persona){
+         ipersonaRepository.save(persona);
+     }
+     
+     public void delete(int id){
+         ipersonaRepository.deleteById(id);
+     }
+     
+     public boolean existsById(int id){
+         return ipersonaRepository.existsById(id);
+     }
+     
+     public boolean existsByNombre(String nombre){
+         return ipersonaRepository.existsByNombre(nombre);
+     }
     
-    @Override
-    public List<Persona> getPersona() {
-           List<Persona> persona = ipersonaRepository.findAll();
-           
-           //Devuelvo la variablde donde se guarda todo
-           return persona;
-    }
-
-    @Override
-    public void savePersona(Persona persona) {
-        ipersonaRepository.save(persona);
-        
-    }
-
-    @Override
-    public void deletePersona(Long id) {
-        ipersonaRepository.deleteById(id);
-    }
-
-    @Override
-    public Persona findPersona(Long id) {
-        Persona persona=ipersonaRepository.findById(id).orElse(null);
-        return persona;
-        
-    }
     
 }
