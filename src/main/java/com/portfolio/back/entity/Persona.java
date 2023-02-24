@@ -76,6 +76,10 @@ public class Persona {
     public void setImg(String img) {
         this.img = img;
     }
- 
+
+    
+    
+    
+    
     
 }
